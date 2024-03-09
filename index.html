@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance API Response</title>
+</head>
+<body>
+    <script>
+        // Function to parse URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+
+        // Get the symbol parameter from the URL or use default value
+        var symbol = getUrlParameter('symbol') || 'TRXUSDT';
+
+        // Fetch data from the Binance API
+        fetch('https://api.binance.com/api/v3/ticker/price?symbol=' + symbol)
+            .then(response => response.json())
+            .then(data => {
+                // Set the Content-Type header to JSON
+                document.contentType = 'application/json';
+
+                // Output JSON data
+                document.write(JSON.stringify(data, null, 2));
+
+                // Prevent the browser from interpreting the JSON as HTML
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Output JSON error message
+                document.write(JSON.stringify({ error: 'Error fetching data. Please try again later.' }));
+                document.close();
+            });
+    </script>
+</body>
+</html>
